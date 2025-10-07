@@ -37,7 +37,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('transactions')"
                                     :active="route().current('transactions')"
                                 >
-                                    transactions
+                                    Transactions
                                 </NavLink>
                             </div>
                         </div>
@@ -145,15 +145,6 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('transactions')"
                         >
                             Transactions
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('transactions')"
-                            :active="route().current('transactions')"
-                        >
-                            Transaction History
                         </ResponsiveNavLink>
                     </div>
 

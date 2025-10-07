@@ -7,14 +7,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// 👇 Redirect root route to /transactions
+Route::redirect('/', '/transactions');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/transactions', IndexController::class)->name('transactions');
@@ -28,3 +22,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+require __DIR__.'/channels.php';

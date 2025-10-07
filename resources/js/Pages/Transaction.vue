@@ -1,15 +1,44 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { Head, useForm, usePage, router } from '@inertiajs/vue3'
-import { ref } from 'vue'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { Head, useForm, usePage, router } from '@inertiajs/vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 // ✅ Get data from backend
 const { props } = usePage()
 const user = props.auth?.user || {}
 const transactions = ref(props.transactions || [])
-const balance = ref(props.balance || 0)
+const balance = ref(props.balance || 0);
+
+onMounted(() => {
+    const channel = window.Echo.private(`transactions.${user.id}`)
+
+    channel.listen('TransactionCreated', (event) => {
+        // Update balance
+        if (event.balance) {
+            if (event.balance.sender && event.transaction.sender_id === user.id) {
+                balance.value = event.balance.sender
+            } else if (event.balance.receiver && event.transaction.receiver_id === user.id) {
+                balance.value = event.balance.receiver
+            }
+        }
+
+        // Push new transaction into list
+        transactions.value.unshift(event.transaction)
+
+        // Notify user
+        if (event.transaction.receiver_id === user.id) {
+            toast.success(`💰 You received Rs. ${event.transaction.amount} from ${event.transaction.sender.name}`)
+        } else if (event.transaction.sender_id === user.id) {
+            toast.info(`📤 You sent Rs. ${event.transaction.amount} to ${event.transaction.receiver.name}`)
+        }
+    })
+});
+
+onBeforeUnmount(() => {
+    window.Echo.leave(`transactions.${user.id}`)
+});
 
 // 🔩 Modal visibility
 const showModal = ref(false);
