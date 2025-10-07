@@ -196,9 +196,3 @@ Before pushing code, make sure:
 ## 🛡️ License
 
 This project is open-sourced software licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
----
-
-### ❤️ Made with Laravel, Vue, and Love.
-
----
