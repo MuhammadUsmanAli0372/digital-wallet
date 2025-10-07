@@ -1,43 +1,41 @@
 <script setup>
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
 import { Head, useForm, usePage, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
 // ✅ Get data from backend
-const { props } = usePage()
-const user = props.auth?.user || {}
-const transactions = ref(props.transactions || [])
+const { props } = usePage();
+const user = props.auth?.user || {};
+const transactions = ref(props.transactions || []);
 const balance = ref(props.balance || 0);
 
+// 🧠 Real-time updates via Echo
 onMounted(() => {
-    const channel = window.Echo.private(`transactions.${user.id}`)
+    const channel = window.Echo.private(`transactions.${user.id}`);
 
     channel.listen('TransactionCreated', (event) => {
-        // Update balance
         if (event.balance) {
             if (event.balance.sender && event.transaction.sender_id === user.id) {
-                balance.value = event.balance.sender
+                balance.value = event.balance.sender;
             } else if (event.balance.receiver && event.transaction.receiver_id === user.id) {
-                balance.value = event.balance.receiver
+                balance.value = event.balance.receiver;
             }
         }
 
-        // Push new transaction into list
-        transactions.value.unshift(event.transaction)
+        transactions.value.unshift(event.transaction);
 
-        // Notify user
         if (event.transaction.receiver_id === user.id) {
-            toast.success(`💰 You received Rs. ${event.transaction.amount} from ${event.transaction.sender.name}`)
+            toast.success(`💰 You received Rs. ${event.transaction.amount} from ${event.transaction.sender.name}`);
         } else if (event.transaction.sender_id === user.id) {
-            toast.info(`📤 You sent Rs. ${event.transaction.amount} to ${event.transaction.receiver.name}`)
+            toast.info(`📤 You sent Rs. ${event.transaction.amount} to ${event.transaction.receiver.name}`);
         }
-    })
+    });
 });
 
 onBeforeUnmount(() => {
-    window.Echo.leave(`transactions.${user.id}`)
+    window.Echo.leave(`transactions.${user.id}`);
 });
 
 // 🔩 Modal visibility
@@ -49,19 +47,61 @@ const form = useForm({
     amount: '',
 });
 
+// 🧮 Real-time form validation states
+const errors = ref({
+    receiver_id: '',
+    amount: '',
+});
+
+// ✅ Validation rules
+const validateForm = () => {
+    errors.value = { receiver_id: '', amount: '' };
+
+    if (!form.receiver_id) {
+        errors.value.receiver_id = 'Receiver ID is required.';
+    } else if (form.receiver_id == user.id) {
+        errors.value.receiver_id = 'You cannot send money to yourself.';
+    }
+
+    if (!form.amount) {
+        errors.value.amount = 'Amount is required.';
+    } else if (isNaN(form.amount) || Number(form.amount) <= 0) {
+        errors.value.amount = 'Enter a valid positive amount.';
+    } else if (Number(form.amount) > balance.value) {
+        errors.value.amount = 'Insufficient balance.';
+    }
+
+    return !errors.value.receiver_id && !errors.value.amount;
+};
+
+// 💸 Formatted currency preview
+const formattedAmount = computed(() => {
+    if (!form.amount) return '';
+    return new Intl.NumberFormat('en-PK', {
+        style: 'currency',
+        currency: 'PKR',
+        minimumFractionDigits: 2,
+    }).format(form.amount);
+});
+
 // 📤 Handle form submission
 const submit = () => {
+    if (!validateForm()) {
+        toast.error('⚠️ Please fix the highlighted errors.');
+        return;
+    }
+
     form.post(route('transactions.store'), {
         onSuccess: () => {
-            toast.success('💸 Transaction successful!', { autoClose: 3000 })
-            form.reset()
+            toast.success('💸 Transaction successful!', { autoClose: 3000 });
+            form.reset();
             showModal.value = false;
         },
         onError: () => {
-            toast.error('❌ Transaction failed. Please try again.', { autoClose: 3000 })
+            toast.error('❌ Transaction failed. Please try again.', { autoClose: 3000 });
         },
-    })
-}
+    });
+};
 </script>
 
 <template>
@@ -74,7 +114,7 @@ const submit = () => {
                 <h2 class="text-xl font-semibold text-gray-800">Transactions</h2>
                 <button
                     @click="showModal = true"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
                 >
                     + New Transaction
                 </button>
@@ -109,18 +149,12 @@ const submit = () => {
                     <tbody class="divide-y divide-gray-100">
                         <tr v-for="(t, index) in transactions" :key="t.id">
                             <td class="px-4 py-2 text-sm">{{ index + 1 }}</td>
-
-                            <!-- Sender -->
                             <td class="px-4 py-2 text-sm">
                                 {{ t.sender_id === user.id ? 'You' : t.sender?.name }}
                             </td>
-
-                            <!-- Receiver -->
                             <td class="px-4 py-2 text-sm">
                                 {{ t.receiver_id === user.id ? 'You' : t.receiver?.name }}
                             </td>
-
-                            <!-- Amount -->
                             <td
                                 class="px-4 py-2 text-sm font-medium"
                                 :class="{
@@ -130,8 +164,6 @@ const submit = () => {
                             >
                                 {{ t.sender_id === user.id ? '-' : '+' }} Rs. {{ t.amount }}
                             </td>
-
-                            <!-- Type -->
                             <td class="px-4 py-2 text-sm">
                                 <span
                                     class="px-2 py-1 rounded-full text-xs font-semibold"
@@ -143,8 +175,6 @@ const submit = () => {
                                     {{ t.receiver_id === user.id ? 'Received' : 'Sent' }}
                                 </span>
                             </td>
-
-                            <!-- Date -->
                             <td class="px-4 py-2 text-sm text-gray-500">
                                 {{ new Date(t.created_at).toLocaleString() }}
                             </td>
@@ -182,12 +212,12 @@ const submit = () => {
                         <input
                             v-model="form.receiver_id"
                             type="number"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required
                         />
-                        <div v-if="form.errors.receiver_id" class="text-sm text-red-600">
-                            {{ form.errors.receiver_id }}
-                        </div>
+                        <p v-if="errors.receiver_id" class="text-sm text-red-600 mt-1">
+                            {{ errors.receiver_id }}
+                        </p>
                     </div>
 
                     <!-- Amount -->
@@ -197,12 +227,15 @@ const submit = () => {
                             v-model="form.amount"
                             type="number"
                             step="0.01"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required
                         />
-                        <div v-if="form.errors.amount" class="text-sm text-red-600">
-                            {{ form.errors.amount }}
-                        </div>
+                        <p v-if="formattedAmount" class="text-sm text-gray-500 mt-1">
+                            ({{ formattedAmount }})
+                        </p>
+                        <p v-if="errors.amount" class="text-sm text-red-600 mt-1">
+                            {{ errors.amount }}
+                        </p>
                     </div>
 
                     <!-- Buttons -->
@@ -217,7 +250,7 @@ const submit = () => {
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                         >
                             {{ form.processing ? 'Sending...' : 'Send' }}
                         </button>
