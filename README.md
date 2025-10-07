@@ -1,61 +1,204 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <a href="https://laravel.com" target="_blank">
+    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+  </a>
 </p>
 
-## About Laravel
+<h2 align="center">🚀 Laravel + Inertia.js + Vue 3 + Pusher + MySQL Starter</h2>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <a href="https://laravel.com">Laravel</a> •
+  <a href="https://inertiajs.com">Inertia.js</a> •
+  <a href="https://vuejs.org">Vue 3</a> •
+  <a href="https://pusher.com">Pusher</a> •
+  <a href="https://www.mysql.com">MySQL</a>
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🧩 About the Project
 
-## Learning Laravel
+This is a modern Laravel 12 application powered by **Inertia.js** and **Vue 3**, designed for a smooth single-page app experience.
+It includes **real-time features** via **Pusher** and uses **MySQL** as the database.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The setup ensures clean structure, responsive UI, and real-time updates (e.g., transactions, notifications, etc.).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Prerequisites
 
-## Laravel Sponsors
+Before setting up the project, make sure you have the following installed on your system:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Requirement | Version | Description |
+|--------------|----------|-------------|
+| [PHP](https://www.php.net/downloads.php) | 8.2 or higher | Required by Laravel 12 |
+| [Composer](https://getcomposer.org/) | Latest | Dependency manager for PHP |
+| [Node.js](https://nodejs.org/) | 18+ or 20+ | For frontend assets & Vite |
+| [NPM](https://www.npmjs.com/) or [Bun](https://bun.sh) | Latest | Package manager |
+| [MySQL](https://www.mysql.com/) | 8.0+ | Database server |
+| [Pusher Account](https://pusher.com) | — | For real-time broadcasting |
+| [Git](https://git-scm.com/) | — | For version control |
+| [WSL 2 (optional)](https://learn.microsoft.com/en-us/windows/wsl/) | — | Recommended for Windows users |
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Installation Steps
 
-## Contributing
+Follow these steps to set up and run the project locally:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/MuhammadUsmanAli0372/digital-wallet
+cd digital-wallet
+```
 
-## Code of Conduct
+### 2️⃣ Install PHP Dependencies
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3️⃣ Install Node/Bun Dependencies
+If using **NPM**:
+```bash
+npm install
+```
+If using **Bun**:
+```bash
+bun install
+```
 
-## Security Vulnerabilities
+### 4️⃣ Create Environment File
+Copy the example environment file and configure it:
+```bash
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Then update the following values in `.env`:
 
-## License
+```dotenv
+APP_NAME="Your App Name"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Broadcasting (Pusher)
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=your-app-id
+PUSHER_APP_KEY=your-app-key
+PUSHER_APP_SECRET=your-app-secret
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+```
+
+### 5️⃣ Generate Application Key
+```bash
+php artisan key:generate
+```
+
+### 6️⃣ Run Database Migrations & Seeders
+```bash
+php artisan migrate --seed
+```
+
+### 7️⃣ Start the Laravel Development Server
+```bash
+composer run dev
+```
+
+Your application will be available at:
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## ⚡ Real-Time Features
+
+This project uses **Laravel Echo** and **Pusher** for real-time broadcasting.
+
+### Setup in JavaScript (`resources/js/bootstrap.js` or `app.js`):
+```js
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+  broadcaster: 'pusher',
+  key: import.meta.env.VITE_PUSHER_APP_KEY,
+  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+  forceTLS: true,
+});
+```
+
+Make sure the `.env` and `vite.config.js` are correctly configured for your Pusher credentials.
+
+---
+
+## 🧱 Tech Stack
+
+| Layer | Technology |
+|-------|-------------|
+| Backend | Laravel 12 |
+| Frontend | Inertia.js + Vue 3 |
+| Database | MySQL |
+| Real-Time | Pusher |
+| Package Manager | Composer + NPM/Bun |
+| Build Tool | Vite |
+| Authentication | Laravel Breeze / Fortify (optional) |
+
+---
+
+## 🧪 Running Tests
+
+```bash
+php artisan test
+```
+
+---
+
+## 🧰 Useful Artisan Commands
+
+| Command | Description |
+|----------|-------------|
+| `php artisan serve` | Run local development server |
+| `php artisan migrate` | Run database migrations |
+| `php artisan db:seed` | Seed database with sample data |
+| `php artisan queue:work` | Process queued jobs |
+| `php artisan route:list` | List all application routes |
+| `php artisan event:generate` | Generate missing event classes |
+
+---
+
+## 🧑‍💻 Contributing
+
+Contributions are welcome!
+Please fork the repository and submit a pull request with clear commits.
+
+Before pushing code, make sure:
+- Code follows **PSR-12** standards.
+- All tests pass.
+- No sensitive credentials are committed.
+
+---
+
+## 🛡️ License
+
+This project is open-sourced software licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+### ❤️ Made with Laravel, Vue, and Love.
+
+---
