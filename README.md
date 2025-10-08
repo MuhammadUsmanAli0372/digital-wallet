@@ -113,11 +113,6 @@ php artisan migrate --seed
 
 ### 7️⃣ Start the Laravel Development Server
 ```bash
-npm install
-```
-
-### 8️⃣ Start the Laravel Development Server
-```bash
 composer run dev
 ```
 
